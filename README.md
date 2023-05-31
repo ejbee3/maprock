@@ -7,7 +7,3 @@
 3. make a range control
 4. make a search control
 5. make it look nice
-
-```
-
-```
