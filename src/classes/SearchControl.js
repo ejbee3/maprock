@@ -7,22 +7,28 @@ export class SearchControl extends Control {
   constructor(opt_options) {
     const options = opt_options || {};
 
-    const button = document.createElement("button");
-    button.innerHTML = "N";
+    const searchInput = document.createElement("input");
+    searchInput.setAttribute("type", "text");
+    searchInput.setAttribute("placeholder", "search...");
+
+    const range = document.createElement("input");
+    range.setAttribute("type", "range");
+    range.setAttribute("min", "50");
+    range.setAttribute("max", "200");
 
     const element = document.createElement("div");
-    element.className = "rotate-north ol-unselectable ol-control";
-    element.appendChild(button);
+    element.appendChild(searchInput);
+    element.appendChild(range);
 
     super({
       element: element,
       target: options.target,
     });
 
-    button.addEventListener("click", this.handleRotateNorth.bind(this), false);
+    // button.addEventListener("click", this.handleRotateNorth.bind(this), false);
   }
 
-  handleRotateNorth() {
-    this.getMap().getView().setRotation(1);
-  }
+  // handleRotateNorth() {
+  //   this.getMap().getView().setRotation(1);
+  // }
 }
