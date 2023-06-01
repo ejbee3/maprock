@@ -1,9 +1,11 @@
 <script>
   import Map from "./lib/Map.svelte";
+
+  console.log(import.meta.env.GOOGLE_ACCESS_KEY);
 </script>
 
 <main>
-  <h1>this is my MapRock</h1>
+  <h1>MapRocks</h1>
   <section><Map /></section>
 </main>
 
@@ -12,5 +14,9 @@
   h1 {
     font-family: "Pacifico", cursive;
     font-size: 36px;
+  }
+
+  main {
+    margin-left: 4rem;
   }
 </style>

@@ -4,38 +4,33 @@
   import OSM from "ol/source/OSM.js";
   import TileLayer from "ol/layer/Tile.js";
   import { onMount } from "svelte";
-  import { Attribution } from "ol/control";
+  import { defaults } from "ol/control.js";
+  import { SearchControl } from "../classes/SearchControl";
 
   let mapArea;
-  let osmText;
 
   onMount(() => {
     const map = new Map({
       layers: [new TileLayer({ source: new OSM() })],
-      controls: [],
+      controls: defaults({ attribution: false, rotate: false }).extend([
+        new SearchControl(),
+      ]),
       view: new View({
         center: [0, 0],
         zoom: 3,
       }),
       target: mapArea,
     });
-    map.addControl(new Attribution({ target: osmText }));
   });
 </script>
 
 <main>
   <div bind:this={mapArea} />
-  <p bind:this={osmText} class="osm__text" />
 </main>
 
 <style>
   div {
-    width: 100%;
-    height: 400px;
-  }
-
-  .osm__text {
-    color: aliceblue;
-    font-size: 18px;
+    width: 75%;
+    height: 500px;
   }
 </style>
