@@ -4,8 +4,8 @@
   import OSM from "ol/source/OSM.js";
   import TileLayer from "ol/layer/Tile.js";
   import { onMount } from "svelte";
-  import { defaults } from "ol/control.js";
   import { SearchControl } from "../classes/SearchControl";
+  import { defaults } from "ol/control";
 
   let mapArea;
 

@@ -11,7 +11,12 @@
 
   onMount(() => {
     fetch("https://data.nasa.gov/resource/gh4g-9sfh.json?$limit=20")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("failed to fetch data");
+        }
+        return response.json();
+      })
       .then((data) => {
         rocks = data;
       })
@@ -36,7 +41,6 @@
 <main>
   <h1>MapRocks</h1>
   <section><Map /></section>
-  <button on:click={() => console.log(rangeRocks)}>check console</button>
 </main>
 
 <style>
