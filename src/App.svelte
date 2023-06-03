@@ -4,24 +4,39 @@
 
   // console.log(import.meta.env.GOOGLE_ACCESS_KEY);
 
+  let rocks = [];
+  let rangeRocks = [];
+  let range = 50;
+  let center = { x: 50, y: 6 };
+
   onMount(() => {
-    async function getData(url) {
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = response.json();
-        console.log(data);
-      }
-    }
-    getData(
-      // "https://data.nasa.gov/resource/gh4g-9sfh.json?$limit=10&$offset=0&$order=id"
-      "https://data.nasa.gov/resource/gh4g-9sfh.json?nametype=Relict&$limit=20"
-    );
+    fetch("https://data.nasa.gov/resource/gh4g-9sfh.json?$limit=20")
+      .then((response) => response.json())
+      .then((data) => {
+        rocks = data;
+      })
+      .finally(() => {
+        rocks.forEach((r) => {
+          if (r.geolocation) {
+            const x = Number(r.geolocation.latitude);
+            const y = Number(r.geolocation.longitude);
+            const formula = Math.sqrt(
+              Math.pow(center.x - x, 2) + Math.pow(center.y - y, 2)
+            );
+            console.log(formula);
+            if (formula < range) {
+              rangeRocks.push(r);
+            }
+          }
+        });
+      });
   });
 </script>
 
 <main>
   <h1>MapRocks</h1>
   <section><Map /></section>
+  <button on:click={() => console.log(rangeRocks)}>check console</button>
 </main>
 
 <style>
