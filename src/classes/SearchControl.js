@@ -40,8 +40,44 @@ export class SearchControl extends Control {
 
     // -105.31667 26.96667
 
-    this.getMap().getView().setCenter(center);
+    this.flyTo(center, function () {});
     // @ts-ignore
     document.getElementById("search__text").value = "";
+  }
+
+  flyTo(location, done) {
+    const view = this.getMap().getView();
+    const duration = 2500;
+    const zoom = this.getMap().getView().getZoom();
+    let parts = 2;
+    let called = false;
+    function callback(complete) {
+      --parts;
+      if (called) {
+        return;
+      }
+      if (parts === 0 || !complete) {
+        called = true;
+        done(complete);
+      }
+    }
+    view.animate(
+      {
+        center: location,
+        duration: duration,
+      },
+      callback
+    );
+    view.animate(
+      {
+        zoom: zoom - 1,
+        duration: duration / 2,
+      },
+      {
+        zoom: zoom + 2,
+        duration: duration / 2,
+      },
+      callback
+    );
   }
 }
