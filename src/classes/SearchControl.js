@@ -1,8 +1,8 @@
 import { Control } from "ol/control.js";
 import { fromLonLat } from "ol/proj";
 
-export class SearchControl extends Control {
-  constructor(rocks) {
+export default class SearchControl extends Control {
+  constructor(api_key) {
     const searchInput = document.createElement("input");
     searchInput.setAttribute("type", "text");
     searchInput.setAttribute("placeholder", "search...");
@@ -22,27 +22,56 @@ export class SearchControl extends Control {
     element.appendChild(range);
     element.appendChild(btn);
 
+    let center;
+
     super({
       element: element,
     });
 
-    this._rocks = rocks;
+    this._api_key = api_key;
 
     btn.addEventListener("click", this.searchForCenter.bind(this), false);
   }
 
   searchForCenter(e) {
     e.preventDefault();
+    let coords = [];
+    let rocks = [];
     // @ts-ignore
     const query = document.getElementById("search__text").value;
-    const coords = query.split(" ").map((c) => parseFloat(c));
-    const center = fromLonLat(coords); // LONGITUDE FIRST
+    const url = "https://api.api-ninjas.com/v1/city?name=";
+    fetch(url + query, { headers: { "X-Api-Key": this._api_key } })
+      .then((resp) => {
+        if (!resp.ok) {
+          throw new Error("couldn't find city");
+        }
+        return resp.json();
+      })
+      .then((data) => {
+        coords = data;
+        this.center = fromLonLat([coords[0].longitude, coords[0].latitude]);
+        console.log(this.center);
+      })
+      .finally(() => {
+        fetch(
+          `https://data.nasa.gov/resource/gh4g-9sfh.json?$where=within_circle(GeoLocation, ${coords[0].latitude}, ${coords[0].longitude}, 160000)`
+        )
+          .then((resp) => {
+            if (!resp.ok) {
+              throw new Error("no meteorite data found");
+            }
+            return resp.json();
+          })
+          .then((data) => {
+            rocks = data;
+          })
+          .finally(() => {
+            console.log(rocks);
+          });
+      });
 
-    // -105.31667 26.96667
-
-    this.flyTo(center, function () {});
-    // @ts-ignore
-    document.getElementById("search__text").value = "";
+    this.flyTo(this.center, function () {});
+    // this.getMap().getView().setCenter(this.center);
   }
 
   flyTo(location, done) {

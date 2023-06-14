@@ -4,17 +4,19 @@
   import OSM from "ol/source/OSM.js";
   import TileLayer from "ol/layer/Tile.js";
   import { onMount } from "svelte";
-  import { SearchControl } from "../classes/SearchControl";
+  import SearchControl from "../classes/SearchControl";
   import { defaults } from "ol/control";
 
   let mapArea;
 
   onMount(() => {
-    const map = new Map({
+    new Map({
       layers: [new TileLayer({ source: new OSM() })],
-      controls: defaults({ attribution: false, rotate: false }).extend([
-        new SearchControl(),
-      ]),
+      controls: defaults({
+        attribution: false,
+        rotate: false,
+        zoom: false,
+      }).extend([new SearchControl(import.meta.env.VITE_CITY_ACCESS_KEY)]),
       view: new View({
         center: [0, 0],
         zoom: 3,
