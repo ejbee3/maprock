@@ -67,6 +67,8 @@ export default class SearchControl extends Control {
           })
           .finally(() => {
             console.log(rocks);
+            // @ts-ignore
+            document.getElementById("search__text").value = "";
           });
       });
 
