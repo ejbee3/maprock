@@ -50,7 +50,7 @@ export default class SearchControl extends Control {
       .then((data) => {
         coords = data;
         this.center = fromLonLat([coords[0].longitude, coords[0].latitude]);
-        console.log(this.center);
+        this.flyTo(this.center, function () {});
       })
       .finally(() => {
         fetch(
@@ -70,7 +70,6 @@ export default class SearchControl extends Control {
           });
       });
 
-    this.flyTo(this.center, function () {});
     // this.getMap().getView().setCenter(this.center);
   }
 
